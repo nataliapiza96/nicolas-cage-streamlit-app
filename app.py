@@ -71,6 +71,12 @@ if not action_movies.empty:
 else:
     st.write("No action movies found.")
 
+# Display the year with the most movies
+st.subheader("Year with the Most Movies")
+year_with_most_movies = df_clean['Year'].value_counts().idxmax()
+most_movies_count = df_clean['Year'].value_counts().max()
+st.write(f"The year with the most movies is {year_with_most_movies} with {most_movies_count} movies.")
+
 # Display the average rating of movies in 2014
 st.subheader("Average IMDb Rating in 2014")
 movies_2014 = df_clean[df_clean['Year'] == 2014]
@@ -79,6 +85,14 @@ if not movies_2014.empty:
     st.write(f"The average IMDb rating of Nicolas Cage's movies in 2014 is: {average_rating_2014:.2f}")
 else:
     st.write("No movies found for 2014.")
+
+# Display the actor Nicolas Cage has acted with the most
+st.subheader("Actor Nicolas Cage Has Acted with the Most")
+co_actors_series = df_clean['Cast'].str.replace("Nicolas Cage", "", case=False).str.split(',').explode().str.strip()
+co_actors_series = co_actors_series[co_actors_series != ""]
+most_common_co_actor = co_actors_series.value_counts().idxmax()
+most_common_co_actor_count = co_actors_series.value_counts().max()
+st.write(f"Nicolas Cage has acted the most with {most_common_co_actor}, in {most_common_co_actor_count} movies.")
 
 # Distribution of movies by genre
 st.subheader("Distribution of Movies by Genre")
@@ -95,18 +109,4 @@ st.subheader("Number of Movies per Decade")
 df_clean['Decade'] = (df_clean['Year'] // 10) * 10
 movies_per_decade = df_clean['Decade'].value_counts().sort_index()
 st.bar_chart(movies_per_decade)
-
-# Display the year with the most movies
-st.subheader("Year with the Most Movies")
-year_with_most_movies = df_clean['Year'].value_counts().idxmax()
-most_movies_count = df_clean['Year'].value_counts().max()
-st.write(f"The year with the most movies is {year_with_most_movies} with {most_movies_count} movies.")
-
-# Display the actor Nicolas Cage has acted with the most
-st.subheader("Actor Nicolas Cage Has Acted with the Most")
-co_actors_series = df_clean['Cast'].str.replace("Nicolas Cage", "", case=False).str.split(',').explode().str.strip()
-co_actors_series = co_actors_series[co_actors_series != ""]
-most_common_co_actor = co_actors_series.value_counts().idxmax()
-most_common_co_actor_count = co_actors_series.value_counts().max()
-st.write(f"Nicolas Cage has acted the most with {most_common_co_actor}, in {most_common_co_actor_count} movies.")
 
