@@ -23,6 +23,11 @@ st.subheader("Number of Movies")
 num_movies = df_clean.shape[0]
 st.write(f"Nicolas Cage has acted in {num_movies} movies.")
 
+# Display the year of the first rated movie
+st.subheader("Year of First Rated Movie")
+first_rated_movie_year = df_clean[df_clean['Rating'].notnull()]['Year'].min()
+st.write(f"Nicolas Cage's first rated movie was released in: {first_rated_movie_year}")
+
 # Display the highest and lowest rated movies
 st.subheader("Highest and Lowest Rated Movies")
 highest_rated_movie = df_clean.loc[df_clean['Rating'].idxmax()]
@@ -30,9 +35,11 @@ lowest_rated_movie = df_clean.loc[df_clean['Rating'].idxmin()]
 st.write(f"The highest-rated movie is '{highest_rated_movie['Title']}' ({highest_rated_movie['Year']}) with a rating of {highest_rated_movie['Rating']}.")
 st.write(f"The lowest-rated movie is '{lowest_rated_movie['Title']}' ({lowest_rated_movie['Year']}) with a rating of {lowest_rated_movie['Rating']}.")
 
-# Display the genre of the highest-rated movie
+# Display the genre of the highest and lowest rated movies
 highest_rated_movie_genre = highest_rated_movie['Genre']
+lowest_rated_movie_genre = lowest_rated_movie['Genre']
 st.write(f"The genre of the highest-rated movie is: {highest_rated_movie_genre}")
+st.write(f"The genre of the lowest-rated movie is: {lowest_rated_movie_genre}")
 
 # Display the average IMDb rating and Metascore
 st.subheader("Average Ratings and Metascore")
@@ -46,6 +53,32 @@ st.subheader("Most Common Genre")
 genre_series = df_clean['Genre'].str.split(',', expand=True).stack().reset_index(drop=True)
 most_common_genre = genre_series.value_counts().idxmax()
 st.write(f"The genre Nicolas Cage has acted in the most is: {most_common_genre}")
+
+# Display the highest-rated action movie
+st.subheader("Highest Rated Action Movie")
+action_movies = df_clean[df_clean['Genre'].str.contains("Action", case=False, na=False)]
+if not action_movies.empty:
+    highest_rated_action_movie = action_movies.loc[action_movies['Rating'].idxmax()]
+    st.write(f"The highest-rated action movie is '{highest_rated_action_movie['Title']}' ({highest_rated_action_movie['Year']}) with a rating of {highest_rated_action_movie['Rating']}.")
+else:
+    st.write("No action movies found.")
+
+# Display the average rating of action movies
+st.subheader("Average Rating of Action Movies")
+if not action_movies.empty:
+    average_action_movie_rating = action_movies['Rating'].mean()
+    st.write(f"The average IMDb rating of Nicolas Cage's action movies is: {average_action_movie_rating:.2f}")
+else:
+    st.write("No action movies found.")
+
+# Display the average rating of movies in 2014
+st.subheader("Average IMDb Rating in 2014")
+movies_2014 = df_clean[df_clean['Year'] == 2014]
+if not movies_2014.empty:
+    average_rating_2014 = movies_2014['Rating'].mean()
+    st.write(f"The average IMDb rating of Nicolas Cage's movies in 2014 is: {average_rating_2014:.2f}")
+else:
+    st.write("No movies found for 2014.")
 
 # Distribution of movies by genre
 st.subheader("Distribution of Movies by Genre")
